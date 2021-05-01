@@ -20,8 +20,30 @@ EpollInstance::~EpollInstance() {
 
 void EpollInstance::close_fd() {
     if (close(this->fd)) {
-        throw "Failed to close epoll file descriptor\\n\"";
+        throw "Failed to close epoll file descriptor\n";
     }
 
     this->fd = -1;
+}
+
+void EpollInstance::registerFD(int fd) {
+    struct epoll_event event;
+    event.events = EPOLLIN;
+    event.data.fd = fd;
+
+    if(epoll_ctl(this->fd, EPOLL_CTL_ADD, fd, &event)) {
+        close_fd();
+        throw "Failed to add file descriptor to epoll\n";
+    }
+}
+
+void EpollInstance::unregisterFD(int fd) {
+    struct epoll_event event;
+    event.events = EPOLLIN;
+    event.data.fd = fd;
+
+    if(epoll_ctl(this->fd, EPOLL_CTL_DEL, fd, &event)) {
+        close_fd();
+        throw "Failed to delete file descriptor to epoll\n";
+    }
 }

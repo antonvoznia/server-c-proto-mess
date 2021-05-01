@@ -9,13 +9,16 @@
 #include <sys/epoll.h> // for epoll_create1()
 
 class EpollInstance {
+    struct epoll_event event;
     int fd;
 
 public:
     EpollInstance();
     ~EpollInstance();
-
     void close_fd();
+
+    void registerFD(int fd);
+    void unregisterFD(int fd);
 };
 
 
