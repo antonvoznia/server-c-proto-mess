@@ -28,6 +28,8 @@ void EpollInstance::close_fd() {
 
 void EpollInstance::registerFD(int fd) {
     struct epoll_event event;
+    memset(&event,0,sizeof(event));
+
     event.events = EPOLLIN;
     event.data.fd = fd;
 
@@ -39,11 +41,29 @@ void EpollInstance::registerFD(int fd) {
 
 void EpollInstance::unregisterFD(int fd) {
     struct epoll_event event;
+    memset(&event,0,sizeof(event));
+
     event.events = EPOLLIN;
     event.data.fd = fd;
 
     if(epoll_ctl(this->fd, EPOLL_CTL_DEL, fd, &event)) {
         close_fd();
         throw "Failed to delete file descriptor to epoll\n";
+    }
+}
+
+// TODO try to add parallel processing via OpenMP
+void EpollInstance::waitEvents() {
+    struct epoll_event events[MAX_EPOLL_EVENTS];
+    while(true) {
+        int eventCount = epoll_wait(this->fd, events, MAX_EPOLL_EVENTS, -1);
+
+        if (eventCount == -1) {
+            throw "Error: cannot get event count!\n";
+        }
+
+        for (int i = 0; i < eventCount; i++) {
+            // TODO to process the events
+        }
     }
 }

@@ -7,6 +7,10 @@
 
 #include <unistd.h>    // for close()
 #include <sys/epoll.h> // for epoll_create1()
+#include <string.h>
+
+
+#define MAX_EPOLL_EVENTS 100
 
 class EpollInstance {
     struct epoll_event event;
@@ -19,6 +23,7 @@ public:
 
     void registerFD(int fd);
     void unregisterFD(int fd);
+    void waitEvents();
 };
 
 
