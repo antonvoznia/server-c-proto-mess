@@ -9,8 +9,12 @@
 #include <sys/epoll.h> // for epoll_create1()
 #include <string.h>
 
+#include "EpollFdStruct.h"
+
 
 #define MAX_EPOLL_EVENTS 100
+
+class EpollFdStruct;
 
 class EpollInstance {
     struct epoll_event event;
@@ -21,8 +25,8 @@ public:
     ~EpollInstance();
     void close_fd();
 
-    void registerFD(int fd);
-    void unregisterFD(int fd);
+    void registerFD(EpollFdStruct &fd);
+    void unregisterFD(EpollFdStruct &fd);
     void waitEvents();
 };
 

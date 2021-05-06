@@ -26,27 +26,27 @@ void EpollInstance::close_fd() {
     this->fd = -1;
 }
 
-void EpollInstance::registerFD(int fd) {
+void EpollInstance::registerFD(EpollFdStruct &efd) {
     struct epoll_event event;
     memset(&event,0,sizeof(event));
 
     event.events = EPOLLIN;
-    event.data.fd = fd;
+    event.data.ptr = &efd;
 
-    if(epoll_ctl(this->fd, EPOLL_CTL_ADD, fd, &event)) {
+    if(epoll_ctl(this->fd, EPOLL_CTL_ADD, efd.fd, &event)) {
         close_fd();
         throw "Failed to add file descriptor to epoll\n";
     }
 }
 
-void EpollInstance::unregisterFD(int fd) {
+void EpollInstance::unregisterFD(EpollFdStruct &efd) {
     struct epoll_event event;
     memset(&event,0,sizeof(event));
 
-    event.events = EPOLLIN;
-    event.data.fd = fd;
+    event.events = 0;
+    event.data.ptr = &efd;
 
-    if(epoll_ctl(this->fd, EPOLL_CTL_DEL, fd, &event)) {
+    if(epoll_ctl(this->fd, EPOLL_CTL_DEL, efd.fd, &event)) {
         close_fd();
         throw "Failed to delete file descriptor to epoll\n";
     }
@@ -64,6 +64,7 @@ void EpollInstance::waitEvents() {
 
         for (int i = 0; i < eventCount; i++) {
             // TODO to process the events
+            static_cast<EpollFdStruct*>(events[i].data.ptr)->handleEvent(events[i].events);
         }
     }
 }
