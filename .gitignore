@@ -3,3 +3,7 @@ cmake-build-debug
 .idea
 Server_c
 example_tcp.cpp
+tester.py
+__pycache__
+esw_server.proto
+esw_server_pb2.py
