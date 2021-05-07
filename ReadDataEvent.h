@@ -9,7 +9,10 @@
 #include "EpollFdStruct.h"
 #include "EpollInstance.h"
 
+#include "messages.pb.h"
+
 #include <string.h>
+#include <set>
 
 // TCP include
 #include <sys/socket.h>
@@ -18,18 +21,18 @@
 #include <fcntl.h>
 #include <stdio.h>
 
-#include <cstring>
-#include <unistd.h>
 #include <byteswap.h>
+
+typedef std::set<std::string> dictionary_t;
 
 class ReadDataEvent : public EpollFdStruct {
 public:
-    ReadDataEvent(uint32_t cfd, EpollInstance &e);
+    ReadDataEvent(uint32_t cfd, EpollInstance &e, dictionary_t *total_words);
     ~ReadDataEvent();
     void handleEvent(uint32_t events);
 
 protected:
-#define SIZE_OF_SIZE_MESSAGE 4
+    dictionary_t *total_words;
 };
 
 

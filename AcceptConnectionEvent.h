@@ -9,6 +9,7 @@
 #include <sys/epoll.h>
 #include "EpollFdStruct.h"
 #include "EpollInstance.h"
+#include "ReadDataEvent.h"
 
 // TCP include
 #include <sys/socket.h>
@@ -30,6 +31,8 @@ protected:
     short int port = -1;
     struct sockaddr_in saddr;
     EpollInstance *ep;
+
+    dictionary_t *total_words;
 };
 
 

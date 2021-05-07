@@ -3,13 +3,14 @@
 //
 
 #include "AcceptConnectionEvent.h"
-#include "ReadDataEvent.h"
 
 #include <iostream>
 #include <cstring>
 
 AcceptConnectionEvent::AcceptConnectionEvent(EpollInstance &e, int short port) : EpollFdStruct(-1, e), port(port) {
     this->fd = socket(AF_INET, SOCK_STREAM, 0);
+
+    this->total_words = new dictionary_t;
 
     std::memset(&saddr, 0, sizeof(saddr));
     saddr.sin_family      = AF_INET;              // IPv4
@@ -40,7 +41,7 @@ void AcceptConnectionEvent::handleEvent(uint32_t events) {
         unregisterFd();
         close(this->fd);
     } else {
-        new ReadDataEvent(accept(fd, NULL, NULL), *this->ep);
+        new ReadDataEvent(accept(fd, NULL, NULL), *this->ep, this->total_words);
     }
 }
 
