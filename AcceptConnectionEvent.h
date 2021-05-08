@@ -10,6 +10,8 @@
 #include "EpollFdStruct.h"
 #include "EpollInstance.h"
 #include "ReadDataEvent.h"
+#include <thread>
+#include <tbb/concurrent_unordered_set.h>
 
 // TCP include
 #include <sys/socket.h>
@@ -18,7 +20,7 @@
 #include <fcntl.h>
 #include <stdio.h>
 
-
+#define THREAD_COUNT 32
 
 class AcceptConnectionEvent : public EpollFdStruct {
 public:
@@ -26,12 +28,15 @@ public:
     ~AcceptConnectionEvent();
 
     void handleEvent(uint32_t events);
+    void waitEvents(int thread_id);
 
 protected:
     short int port = -1;
     struct sockaddr_in saddr;
-    EpollInstance *ep;
+    EpollInstance ep[THREAD_COUNT];
+    int next_thread = 0;
 
+    std::thread thread_pool[THREAD_COUNT];
     dictionary_t *total_words;
 };
 

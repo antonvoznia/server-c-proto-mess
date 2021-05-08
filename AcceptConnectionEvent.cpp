@@ -24,15 +24,21 @@ AcceptConnectionEvent::AcceptConnectionEvent(EpollInstance &e, int short port) :
     fcntl(this->fd, F_SETFL, flags);
 
     listen(this->fd, SOMAXCONN);
-
     registerFd();
-
-    this->ep = &e;
+    for (int i = 0; i < THREAD_COUNT; i++) {
+        thread_pool[i] = std::thread(&AcceptConnectionEvent::waitEvents, this, i);
+    }
 }
 
 // TODO destructor
 AcceptConnectionEvent::~AcceptConnectionEvent() {
 
+}
+
+// per one thread
+void AcceptConnectionEvent::waitEvents(int thread_id) {
+    std::cout << thread_id << std::endl;
+    ep[thread_id].waitEvents();
 }
 
 void AcceptConnectionEvent::handleEvent(uint32_t events) {
@@ -41,7 +47,12 @@ void AcceptConnectionEvent::handleEvent(uint32_t events) {
         unregisterFd();
         close(this->fd);
     } else {
-        new ReadDataEvent(accept(fd, NULL, NULL), *this->ep, this->total_words);
+        new ReadDataEvent(accept(fd, NULL, NULL), this->ep[next_thread], this->total_words);
+
+        next_thread++;
+        if (next_thread == THREAD_COUNT) {
+            next_thread = 0;
+        }
     }
 }
 

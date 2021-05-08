@@ -12,6 +12,8 @@
 #include "messages.pb.h"
 
 #include <string.h>
+#include <vector>
+#include <limits>
 #include <set>
 
 // TCP include
@@ -23,12 +25,15 @@
 
 #include <byteswap.h>
 
-typedef std::set<std::string> dictionary_t;
+#include <tbb/concurrent_unordered_set.h>
+
+typedef tbb::concurrent_unordered_set<std::string> dictionary_t;
 
 class ReadDataEvent : public EpollFdStruct {
 public:
     ReadDataEvent(uint32_t cfd, EpollInstance &e, dictionary_t *total_words);
     ~ReadDataEvent();
+    void addWords(const std::string& data);
     void handleEvent(uint32_t events);
 
 protected:

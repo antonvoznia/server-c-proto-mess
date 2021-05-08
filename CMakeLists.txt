@@ -7,4 +7,4 @@ find_package(OpenMP REQUIRED)
 aux_source_directory(. SRC_LIST)
 add_executable(${PROJECT_NAME} ${SRC_LIST})
 
-target_link_libraries(Server_c PRIVATE protobuf OpenMP::OpenMP_CXX)
+target_link_libraries(Server_c PRIVATE boost_iostreams tbb PRIVATE ${TBB_IMPORTED_TARGETS} protobuf OpenMP::OpenMP_CXX ${Boost_LIBRARIES})

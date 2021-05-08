@@ -3,6 +3,7 @@
 //
 
 #include "EpollInstance.h"
+#include <iostream>
 
 EpollInstance::EpollInstance() {
     this->fd = epoll_create1(0);

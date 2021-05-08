@@ -12,7 +12,7 @@
 #include "EpollFdStruct.h"
 
 
-#define MAX_EPOLL_EVENTS 100
+#define MAX_EPOLL_EVENTS 30
 
 class EpollFdStruct;
 
