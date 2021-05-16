@@ -1,6 +1,7 @@
 
 cmake-build-debug
 .idea
+CMakeCache.txt
 Server_c
 example_tcp.cpp
 tester.py
