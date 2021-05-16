@@ -53,7 +53,6 @@ void EpollInstance::unregisterFD(EpollFdStruct &efd) {
     }
 }
 
-// TODO try to add parallel processing via OpenMP
 void EpollInstance::waitEvents() {
     struct epoll_event events[MAX_EPOLL_EVENTS];
     while(true) {

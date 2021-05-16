@@ -15,7 +15,6 @@ ReadDataEvent::ReadDataEvent(uint32_t cfd, EpollInstance &e, dictionary_t *total
     registerFd();
 }
 
-// TODO destructor
 ReadDataEvent::~ReadDataEvent() {
 }
 
@@ -61,6 +60,8 @@ void ReadDataEvent::handleEvent(uint32_t events) {
 
         if (count < 1) {
             unregisterFd();
+            close(this->fd);
+            delete this;
             return;
         }
         data += count;
