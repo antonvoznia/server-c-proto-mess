@@ -20,7 +20,7 @@
 #include <fcntl.h>
 #include <stdio.h>
 
-#define THREAD_COUNT 32
+#define THREAD_COUNT 16
 
 class AcceptConnectionEvent : public EpollFdStruct {
 public:

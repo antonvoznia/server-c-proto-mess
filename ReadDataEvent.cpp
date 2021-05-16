@@ -67,7 +67,6 @@ void ReadDataEvent::handleEvent(uint32_t events) {
         left -= count;
         size = ntohl(size);
         buff = new char [size];
-//        count = read(this->fd, buff, size);
         std::vector<char> full_data(size);
 
         int count_read = 0;
